@@ -8,7 +8,7 @@ exports.init = function (el) {
 
   new Vue({
     el: el,
-    template: __inline('./home.tpl'),
+    template: __inline('./{{ index_page }}.tpl'),
     data: {
       activePanel: 1,
       isLoading: false,
