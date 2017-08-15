@@ -1,25 +1,23 @@
 {
-  {
-    "prompts": {
-      "description": {
-        "type": "string",
-        "required": false,
-        "message": "描述（description）",
-        "default": "看点项目"
-      },
-      "author": {
-        "type": "string",
-        "message": "作者（author）",
-        "default": "即通综合部开发四组"
-      },
-      "kendiui": {
-        "type": "confirm",
-        "message": "使用 kendiui?"
-      },
-      "karma": {
-        "type": "confirm",
-        "message": "部署 karma?"
-      }
+  "prompts": {
+    "description": {
+      "type": "string",
+      "required": false,
+      "message": "描述（description）",
+      "default": "看点项目"
+    },
+    "author": {
+      "type": "string",
+      "message": "作者（author）",
+      "default": "即通综合部开发四组"
+    },
+    "kendiui": {
+      "type": "confirm",
+      "message": "使用 kendiui?"
+    },
+    "karma": {
+      "type": "confirm",
+      "message": "部署 karma?"
     }
   }
 }
