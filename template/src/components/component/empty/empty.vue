@@ -1,13 +1,16 @@
 <template>
   <div class="SCOPE">
     <img src="../../image/empty.png">
-    <p>{{ text || '暂无数据' }}</p>
+    <p>{{ text }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['text']
+  props: {
+    type: String,
+    default: '暂无数据'
+  }
 }
 </script>
 
