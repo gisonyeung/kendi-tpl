@@ -17,7 +17,7 @@
       "default": "即通综合部开发四组"
     },
     "index_page": {
-      "type" "string",
+      "type": "string",
       "message": "首页（index_page）",
       "default": "home"
     },
