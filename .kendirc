@@ -1,9 +1,0 @@
-{ 
-  "prompts": { 
-    "new_page": {
-        "type": "string",
-        "message": "新页面名称（new_page）",
-        "required": true
-    }
-  }
-}
