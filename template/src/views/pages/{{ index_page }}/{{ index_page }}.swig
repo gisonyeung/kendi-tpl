@@ -1,6 +1,6 @@
 {% extends '../layout/layout.swig' %}
 
-{% block title %}HOME{% endblock %}
+{% block title %}{{ index_page }}{% endblock %}
 
 {% block content %}
   <div id="root"></div>
