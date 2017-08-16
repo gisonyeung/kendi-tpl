@@ -1,33 +1,40 @@
 {
-  "prompts": {
-    "name": {
-      "type": "string",
-      "required": true,
-      "message": "项目名（name）"
-    },
-    "description": {
-      "type": "string",
-      "required": false,
-      "message": "描述（description）",
-      "default": "看点项目"
-    },
-    "author": {
-      "type": "string",
-      "message": "作者（author）",
-      "default": "即通综合部开发四组"
-    },
-    "index_page": {
-      "type": "string",
-      "message": "首页（index_page）",
-      "default": "home"
-    },
-    "kendiui": {
-      "type": "confirm",
-      "message": "使用 kendiui?"
-    },
-    "karma": {
-      "type": "confirm",
-      "message": "部署 karma?"
+  "template": {
+    "prompts": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "message": "项目名（name）"
+      },
+      "description": {
+        "type": "string",
+        "required": false,
+        "message": "描述（description）",
+        "default": "看点项目"
+      },
+      "author": {
+        "type": "string",
+        "message": "作者（author）",
+        "default": "即通综合部开发四组"
+      },
+      "index_page": {
+        "type": "string",
+        "message": "首页（index_page）",
+        "default": "home"
+      },
+      "kendiui": {
+        "type": "confirm",
+        "message": "使用 kendiui?"
+      },
+      "karma": {
+        "type": "confirm",
+        "message": "部署 karma?"
+      }
+    }
+  },
+  "fragment": {
+    "prompts": { 
+      
     }
   }
 }
