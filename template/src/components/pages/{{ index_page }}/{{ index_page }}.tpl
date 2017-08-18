@@ -8,7 +8,7 @@
     :activePanel="activePanel"
     :items="panels"
   ></v-tab>
-  <div v-else class="SCOPE_content">
+  <div class="SCOPE_content">
     <template v-for="panel in panels">
       <div 
         class="SCOPE_part"
