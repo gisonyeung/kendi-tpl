@@ -1,4 +1,6 @@
 {
+  "name": "{{name}}",
+  "description": "{{description}}",
   "scripts": {
     "dev": "fis3 server start && fis3 release -wcLl",
     "build": "fis3 release prod",
@@ -11,7 +13,7 @@
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run"
     {{/karma}}
   },
-  "author": "gisonyang",
+  "author": "{{author}}",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.25.0",
