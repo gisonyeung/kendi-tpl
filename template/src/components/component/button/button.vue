@@ -2,7 +2,7 @@
   <button 
     :class="{SCOPE: true, disabled: disabled}"
     @click="clickHandler"
-  >{{ text }}</button>
+  >\{{ text }}</button>
 </template>
 
 <script>

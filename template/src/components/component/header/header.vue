@@ -22,7 +22,7 @@
         lineHeight: heightPx,
         fontSize: fontSizePx,
       }"
-    >{{ title }}</h1>
+    >\{{ title }}</h1>
   </nav>
 </template>
 

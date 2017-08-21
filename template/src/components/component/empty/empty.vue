@@ -1,7 +1,7 @@
 <template>
   <div class="SCOPE">
     <img src="../../image/empty.png">
-    <p>{{ text }}</p>
+    <p>\{{ text }}</p>
   </div>
 </template>
 

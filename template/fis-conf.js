@@ -33,7 +33,11 @@ fis.set('project.ignore',[
     '*.log',
     '.eslintrc',
     '.gitignore',
-    'test/**'
+    'test/**',
+    'server/**',
+    'TSW/**',
+    'pre-conf/**',
+    'README.md'
 ]);
 
 //components下面的所有js资源都是组件化资源
