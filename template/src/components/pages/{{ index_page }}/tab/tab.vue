@@ -6,7 +6,7 @@
       :class="activePanel === item.key ? 'active' : ''"
       @click="toggleTab(item.key)"
     >
-      {{item.name}}
+      \{{item.name}}
     </li>
   </ul>
 </template>
