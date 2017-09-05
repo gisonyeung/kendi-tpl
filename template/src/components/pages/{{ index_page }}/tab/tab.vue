@@ -1,9 +1,9 @@
 <template>
   <ul class="SCOPE">
     <li class="active">看点</li>
-    <li class="active">视频</li>
-    <li class="active">关注</li>
-    <li class="active">我的</li>
+    <li>视频</li>
+    <li>关注</li>
+    <li>我的</li>
   </ul>
 </template>
 
