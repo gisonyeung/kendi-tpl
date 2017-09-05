@@ -71,8 +71,6 @@ export default {
       this.onGoback(e);
     },
   }
-
-
 }
 </script>
 
