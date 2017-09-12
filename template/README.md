@@ -12,20 +12,12 @@ $ npm install fis3 -g
 ```
 
 ## 开发构建命令
-
-第一步，开启静态服务器：
 ```
-$ npm run server-start
-// 或
-$ fis3 server start
-```
-
-第二步，开启 watch + livereload：
-```
-$ npm run dev
+$ npm start
 // 或
 $ fis3 release -wclL
 ```
+
 四个指令分别代表：
 * `w`=>`watch` 文件监听；
 * `c`=>`clean` 清除缓存；
