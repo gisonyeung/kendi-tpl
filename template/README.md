@@ -4,12 +4,23 @@
 该构建方案依赖于 FIS3 构建工具，如需了解更多 FIS3 信息，请访问 [FIS3 官网](https://fex.baidu.com/fis3/)
 
 ## 安装
-目前没有实现脚手架工具，暂时需要手动 copy 项目源码到本地。
+1. 安装脚手架工具：
+```
+$npm install kendi-cli -g
+// 或
+$tnpm install kendi-cli -g
+```
 
-全局安装 fis3
+2. 全局安装 fis3
 ```
 $ npm install fis3 -g
 ```
+
+3. 安装依赖（因集成了karma单元测试，依赖较多）
+```
+$ npm install
+```
+
 
 ## 开发构建命令
 ```
