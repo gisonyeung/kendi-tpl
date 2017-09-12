@@ -23,10 +23,19 @@ $ npm install
 
 
 ## 开发构建命令
+开发命令：
 ```
 $ npm start
 // 或
 $ fis3 release -wclL
+```
+构建命令：
+```
+// 产出生产环境文件
+$ npm run build
+
+// 产出离线包
+$ npm run zip
 ```
 
 四个指令分别代表：
