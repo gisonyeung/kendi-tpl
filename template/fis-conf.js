@@ -145,10 +145,11 @@ fis.match('*.tpl', {
     useCache: false
 });
 
-// [js] js smart scope & lint
+// [js] js smart scope & lint & babel
 fis.match('*.js', {
     lint: require('./fis-conf/eslint.js'),
-    parser: ss.js,
+    // parser: [ss.js, fis.plugin('babel')],
+    parser: fis.plugin('babel'),
 });
 
 // [img]

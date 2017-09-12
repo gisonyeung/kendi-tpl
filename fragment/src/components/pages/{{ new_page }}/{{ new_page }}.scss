@@ -1,3 +1,14 @@
+@import "../../util/tool.scss";
+
 .SCOPE {
 
+  &_text {
+    text-align: center;
+    margin-top: 100px;
+    color: #666;
+
+    strong {
+      color: $themeColor;
+    }
+  }
 }

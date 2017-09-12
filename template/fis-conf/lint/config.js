@@ -25,6 +25,11 @@ var globals = {
         'Vue',
         'define',
         'require',
+        'mqq',
+        '__DEV__',
+        'TCISD',
+        'BJ_REPORT',
+
     ],
     // 服务端，给未来需要部署 node 代理服务器预留接口
     // server: [
@@ -51,7 +56,7 @@ var rules = {
     'no-duplicate-case': 'case重复',  // case 1: case 1:
     'no-constant-condition': '条件表达式为常量',  // if (true)
     'no-debugger': '禁止使用debugger',
-    'no-func-assign': '禁止给函数赋值',  // foo = 0; function foo () {}
+    // 'no-func-assign': '禁止给函数赋值',  // foo = 0; function foo () {}
     'no-invalid-regexp': '正则语法错误',  // /[/
     'no-unreachable': '永远不会执行的代码',  // return; console.log('unreachable')
     'use-isnan': 'NaN要用isNaN()来判断',

@@ -1,5 +1,3 @@
-var _ = require('../../util/util');
-
 exports.init = function (el) {
 
   new Vue({

@@ -1,3 +1,3 @@
 <div class="SCOPE">
-  This is {{ new_page }} page 
+  <p class="SCOPE_text">This is <strong>{{ new_page }}</strong> page </p>
 </div>

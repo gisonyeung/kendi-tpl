@@ -2,6 +2,7 @@
   "name": "{{name}}",
   "description": "{{description}}",
   "scripts": {
+    "start": "fis3 server start && fis3 release -wcLl",
     "dev": "fis3 server start && fis3 release -wcLl",
     "build": "fis3 release prod",
     "zip": "fis3 release zip",
@@ -60,6 +61,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.4",
-    "vue": "^2.4.2"
+    "vue": "^2.4.2",
+    "whatwg-fetch": "^2.0.3"
   }
 }
