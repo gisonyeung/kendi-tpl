@@ -4,8 +4,11 @@
   "scripts": {
     "start": "fis3 server start && fis3 release -wcLl",
     "dev": "fis3 server start && fis3 release -wcLl",
-    "build": "fis3 release prod",
-    "zip": "fis3 release zip",
+    "dev-build": "fis3 release dev-inline -wcLl",
+    "build": "fis3 release prod && gulp prod",
+    "build-inline": "fis3 release prod-inline && gulp prod-inline",
+    "zip": "fis3 release zip && gulp zip",
+    "zip-inline": "fis3 release zip-inline && gulp zip-inline",
 
     "stop": "fis3 server stop",
     "dir": "fis3 server open"{{#karma}},{{/karma}}
@@ -33,8 +36,13 @@
     "fis3-hook-module": "^1.2.2",
     "fis3-parser-babel": "^1.2.4",
     "fis3-parser-vue-component": "^5.4.0",
+    "fis3-postpackager-inline-ex": "^1.0.0",
     "fis3-postpackager-loader": "^2.1.4",
     "fis3-preprocessor-autoprefixer": "^0.1.1",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-run-sequence": "^0.3.2",
+    "gulp-zip": "^4.0.0",
     "isparta": "^4.0.0",
     "isparta-loader": "^2.0.0",
     {{#karma}}

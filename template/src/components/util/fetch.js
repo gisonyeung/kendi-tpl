@@ -19,7 +19,7 @@ const defaultOpts = {
  * @param url { String }
  * @param options { Object }
  *   options.method { String } 请求方法，默认为 GET
- *   options.params { Object } url查询参数
+ *   options.query { Object } url查询参数
  *   option.body    { Object } body参数，一般用于非GET请求
  * @return { Promise }
  */
@@ -29,8 +29,8 @@ module.exports = function _fetch(url, options = {}) {
 
   
 
-  if (options.params) {
-    url = serializeParams(url, options.params);
+  if (options.query) {
+    url = serializeParams(url, options.query);
   }
 
 

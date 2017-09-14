@@ -37,8 +37,13 @@ fis.set('project.ignore',[
     'server/**',
     'TSW/**',
     'pre-conf/**',
+    'public/**',
+    'gulpfile.js',
     'README.md'
 ]);
+
+/* 匹配规则 */
+
 
 //components下面的所有js资源都是组件化资源
 fis.match("src/components/**", {
@@ -47,10 +52,7 @@ fis.match("src/components/**", {
     useSameNameRequire: true,
 });
 
-// tpl 文件已经内联，不产出
-fis.match("*.tpl", {
-    release: false
-})
+
 
 // [html] *.swig => *.html
 fis.match('(*).swig', {
@@ -61,10 +63,6 @@ fis.match('(*).swig', {
     useCache: false,
     useSameNameRequire: true,
 })
-// 不产出 layout.html
-fis.match('**/layout.swig', {
-    release: false
-});
 
 fis.match('*.vue', {
     isMod: true,
@@ -129,10 +127,6 @@ fis.match('*.scss', {
     // .scss 文件后缀构建后被改成 .css 文件
     rExt: '.css',
 });
-// 不产出 util 中的css
-fis.match('src/components/util/*.scss', {
-    release: false
-})
 
 // component组件资源id支持简写
 fis.match(/^\/src\/components\/(component|pages|util)\/(.*)$/i, {
@@ -157,6 +151,26 @@ fis.match('(*).{png,jepg,jpg,webp,gif}', {
     release: `/${release_config.child.static}/image/$1$2`
 });
 
+
+/* 特殊规则 */
+
+// 不产出 tpl 文件
+fis.match("*.tpl", {
+    release: false
+})
+
+// 不产出 layout.html
+fis.match('**/layout.swig', {
+    release: false
+});
+
+// 不产出 util 中的 css
+fis.match('src/components/util/*.scss', {
+    release: false
+})
+
+
+
 fis.match('::packager', {
     // npm install [-g] fis3-postpackager-loader
     // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
@@ -167,9 +181,37 @@ fis.match('::packager', {
     packager: fis.plugin('map'),
 })
 
-// 生产环境下CSS、JS压缩合并，并产出项目
-// 使用方法 fis3 release prod
+
+// 生产环境：内联页面文件，提取lib文件
 release_pipe(fis.media('prod'))
+    .match('::packager', {
+        // npm install [-g] fis3-postpackager-loader
+        // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
+        // API: https://github.com/fex-team/fis3-postpackager-loader
+        postpackager: [
+            fis.plugin('loader', {
+                resourceType: 'mod',
+                useInlineMap: true, // 异步依赖时，资源映射表内嵌
+                // 将每个页面中除 lib.bundle 以外的文件打包
+                allInOne: {
+                    js: function(file) {
+                        return `/${release_config.child.static}/js/${file.filename}_aio.js`;
+                    },
+                    css: function(file) {
+                        return `/${release_config.child.static}/css/${file.filename}_aio.css`;
+                    },
+                    includeAsyncs: true, // 打包异步依赖
+                }
+            }),
+            fis.plugin('inline-ex', {
+                max: 99999,
+                jsMax: 99999,
+                cssMax: 99999,
+                excludes: ['lib.bundle']
+            })
+        ],
+        packager: fis.plugin('map'),
+    })
     // 将项目产出到 ./${release_config.root} 目录 
     .match('**', {
        // npm install [-g] fis3-deploy-skip-packed
@@ -185,11 +227,86 @@ release_pipe(fis.media('prod'))
         ]
     });
 
-// 产出 zip
+// 生产环境：内联所有文件
+release_pipe_inline(fis.media('prod-inline'))
+    .match('::packager', {
+        // npm install [-g] fis3-postpackager-loader
+        // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
+        // API: https://github.com/fex-team/fis3-postpackager-loader
+        postpackager: [
+            fis.plugin('loader', {
+                resourceType: 'mod',
+                useInlineMap: true, // 异步依赖时，资源映射表内嵌
+                // 将每个页面中除 lib.bundle 以外的文件打包
+                allInOne: {
+                    js: function(file) {
+                        return `/${release_config.child.static}/js/${file.filename}_aio.js`;
+                    },
+                    css: function(file) {
+                        return `/${release_config.child.static}/css/${file.filename}_aio.css`;
+                    },
+                    includeAsyncs: true, // 打包异步依赖
+                }
+            }),
+            fis.plugin('inline-ex', {
+                max: 99999,
+                jsMax: 99999,
+                cssMax: 99999,
+            })
+        ],
+        packager: fis.plugin('map'),
+    })
+    // 将项目产出到 ./${release_config.root} 目录 
+    .match('**', {
+       // npm install [-g] fis3-deploy-skip-packed
+        deploy: [
+            fis.plugin('skip-packed', {
+              skipPackedToPkg: true, // 过滤掉被打包的文件
+              skipPackedToAIO: true, // 滤掉被 AllInOne 打包的文件
+              skipPackedToCssSprite: true, // 过滤掉被 css sprite 合并的文件
+            }),
+            fis.plugin('local-deliver', {
+                to: `./${release_config.root}`
+            }),
+        ]
+    });
+
+
+
+
+
+// 打包离线包：内联页面文件，提取lib文件
 // 使用方法 fis3 release zip
 release_pipe(fis.media('zip'))
-    // 将产出文件打包成 zip
-    .match('**', { 
+    .match('::packager', {
+        // npm install [-g] fis3-postpackager-loader
+        // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
+        // API: https://github.com/fex-team/fis3-postpackager-loader
+        postpackager: [
+            fis.plugin('loader', {
+                resourceType: 'mod',
+                useInlineMap: true, // 异步依赖时，资源映射表内嵌
+                // 将每个页面中除 lib.bundle 以外的文件打包
+                allInOne: {
+                    js: function(file) {
+                        return `/${release_config.child.static}/js/${file.filename}_aio.js`;
+                    },
+                    css: function(file) {
+                        return `/${release_config.child.static}/css/${file.filename}_aio.css`;
+                    },
+                    includeAsyncs: true, // 打包异步依赖
+                }
+            }),
+            fis.plugin('inline-ex', {
+                max: 99999,
+                jsMax: 99999,
+                cssMax: 99999,
+                excludes: ['lib.bundle']
+            })
+        ],
+        packager: fis.plugin('map'),
+    })
+    .match('**', {
         // npm install [-g] fis3-deploy-zip
         // npm install [-g] fis3-deploy-skip-packed
         deploy: [
@@ -198,14 +315,69 @@ release_pipe(fis.media('zip'))
               skipPackedToAIO: true, // 滤掉被 AllInOne 打包的文件
               skipPackedToCssSprite: true, // 过滤掉被 css sprite 合并的文件
             }),
-            fis.plugin('zip', {
-                filename: 'offline.zip'
-            }),
+            // fis.plugin('zip', {
+            //     filename: 'offline.zip'
+            // }),
             fis.plugin('local-deliver', {
                 to: './offline'
             }),
         ]
     });
+
+// 打包离线包：内联所有文件
+// 使用方法 fis3 release zip
+release_pipe(fis.media('zip-inline'))
+    .match('::packager', {
+        // npm install [-g] fis3-postpackager-loader
+        // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
+        // API: https://github.com/fex-team/fis3-postpackager-loader
+        postpackager: [
+            fis.plugin('loader', {
+                resourceType: 'mod',
+                useInlineMap: true, // 异步依赖时，资源映射表内嵌
+                // 将每个页面中除 lib.bundle 以外的文件打包
+                allInOne: {
+                    js: function(file) {
+                        return `/${release_config.child.static}/js/${file.filename}_aio.js`;
+                    },
+                    css: function(file) {
+                        return `/${release_config.child.static}/css/${file.filename}_aio.css`;
+                    },
+                    includeAsyncs: true, // 打包异步依赖
+                }
+            }),
+            fis.plugin('inline-ex', {
+                max: 99999,
+                jsMax: 99999,
+                cssMax: 99999,
+            })
+        ],
+        packager: fis.plugin('map'),
+    })
+    .match('**', {
+        // npm install [-g] fis3-deploy-zip
+        // npm install [-g] fis3-deploy-skip-packed
+        deploy: [
+            fis.plugin('skip-packed', {
+              skipPackedToPkg: true, // 过滤掉被打包的文件
+              skipPackedToAIO: true, // 滤掉被 AllInOne 打包的文件
+              skipPackedToCssSprite: true, // 过滤掉被 css sprite 合并的文件
+            }),
+            // fis.plugin('zip', {
+            //     filename: 'offline.zip'
+            // }),
+            fis.plugin('local-deliver', {
+                to: './offline'
+            }),
+        ]
+    });
+
+
+
+
+
+
+
 
 
 function release_pipe(head) {
@@ -229,6 +401,12 @@ function release_pipe(head) {
             packTo: `/${release_config.child.static}/pkg/lib.bundle.js`,
             parser: false,
         })
+        .match('src/components/util/(*).js', {
+            release: `${release_config.child.static}/js/util/$1`
+        })
+        .match('src/components/Maserati/(*).js', {
+            release: `${release_config.child.static}/js/Maserati/$1`
+        })
         // 生产环境增加 hash
         .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
             useHash: true
@@ -237,11 +415,77 @@ function release_pipe(head) {
             // compress css
             optimizer: fis.plugin('clean-css')
         })
-        .match('::packager', {
-            // npm install [-g] fis3-postpackager-loader
-            // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
-            // API: https://github.com/fex-team/fis3-postpackager-loader
-            postpackager: fis.plugin('loader', {
+};
+
+function release_pipe_inline(head) {
+    return head
+        .match('(*).swig',{
+            release: `/${release_config.child.pages}`,
+            optimizer: fis.plugin('html-minifier')     
+        })
+        .match('**/layout.swig', {
+            release: false
+        })
+        // npm install [-g] fis3-parser-babel
+        // npm install [-g] babel-core
+        .match('*.js', {
+            // es6 => es5
+            parser: fis.plugin('babel'),
+            optimizer: fis.plugin('uglify-js')
+        })
+        .match('src/components/util/(*).js', {
+            release: `${release_config.child.static}/js/util/$1`
+        })
+        .match('src/components/Maserati/(*).js', {
+            release: `${release_config.child.static}/js/Maserati/$1`
+        })
+        // 生产环境增加 hash
+        .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
+            useHash: true
+        })
+        .match('*.scss', {
+            // compress css
+            optimizer: fis.plugin('clean-css')
+        })
+};
+
+
+// 开发环境：不压缩内联所有文件，方便fiddler进行页面替换
+fis.media('dev-inline')
+    .match('(*).swig',{
+        release: `/${release_config.child.pages}`,
+        // optimizer: fis.plugin('html-minifier')     
+    })
+    .match('**/layout.swig', {
+        release: false
+    })
+    // npm install [-g] fis3-parser-babel
+    // npm install [-g] babel-core
+    .match('*.js', {
+        // es6 => es5
+        parser: fis.plugin('babel'),
+        // optimizer: fis.plugin('uglify-js')
+    })
+    .match('src/components/util/(*).js', {
+        release: `${release_config.child.static}/js/util/$1`
+    })
+    .match('src/components/Maserati/(*).js', {
+        release: `${release_config.child.static}/js/Maserati/$1`
+    })
+    // 生产环境增加 hash
+    .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
+        useHash: true
+    })
+    .match('*.scss', {
+        // compress css
+        optimizer: fis.plugin('clean-css')
+    })
+    .match('::packager', {
+        // npm install [-g] fis3-postpackager-loader
+        // 分析 __RESOURCE_MAP__ 结构，来解决资源加载问题
+        // API: https://github.com/fex-team/fis3-postpackager-loader
+        postpackager: [
+            fis.plugin('loader', {
                 resourceType: 'mod',
                 useInlineMap: true, // 异步依赖时，资源映射表内嵌
                 // 将每个页面中除 lib.bundle 以外的文件打包
@@ -255,6 +499,27 @@ function release_pipe(head) {
                     includeAsyncs: true, // 打包异步依赖
                 }
             }),
-            packager: fis.plugin('map'),
-        })
-};
+            fis.plugin('inline-ex', {
+                max: 99999,
+                jsMax: 99999,
+                cssMax: 99999,
+            })
+        ],
+        packager: fis.plugin('map'),
+    })
+    // 将项目产出到 ./${release_config.root} 目录 
+    .match('**', {
+       // npm install [-g] fis3-deploy-skip-packed
+        deploy: [
+            fis.plugin('skip-packed', {
+              skipPackedToPkg: true, // 过滤掉被打包的文件
+              skipPackedToAIO: true, // 滤掉被 AllInOne 打包的文件
+              skipPackedToCssSprite: true, // 过滤掉被 css sprite 合并的文件
+            }),
+            fis.plugin('local-deliver', {
+                to: `./${release_config.root}`
+            }),
+        ]
+    });
+
+
