@@ -29,6 +29,7 @@ gulp.task('zip', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css'], function
   runSequence(
     ['[zip]move:cdn'],
     ['zip:cdn'],
+    ['[zip]clean:cdn'],
     ['zip:offline'],
     ['[zip]clean:temp']
   )
@@ -38,6 +39,7 @@ gulp.task('zip-inline', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css', '[
   runSequence(
     ['[zip]move:cdn'],
     ['zip:cdn'],
+    ['[zip]clean:cdn'],
     ['zip:offline'],
     ['[zip]clean:temp']
   )
@@ -89,6 +91,11 @@ gulp.task('[zip]clean:temp', function() {
   return gulp.src('./' + zip_dir.root)
     .pipe(clean());
 });
+gulp.task('[zip]clean:cdn', function() {
+  return gulp.src('./offline/' + zip_dir.static)
+    .pipe(clean());
+});
+
 
 
 gulp.task('[zip]move:cdn', function() {
