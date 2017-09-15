@@ -19,13 +19,13 @@ var zip_dir = {
 
 /* 外部任务 */
 
-gulp.task('dev-inline', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css', '[prod]clean:pkg']);
+gulp.task('dev-inline', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css', '[prod]clean:pkg', '[prod]clean:static-src']);
 
-gulp.task('prod', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css']);
+gulp.task('prod', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css', '[prod]clean:static-src']);
 
-gulp.task('prod-inline', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css', '[prod]clean:pkg']);
+gulp.task('prod-inline', ['[prod]clean:src', '[prod]clean:js', '[prod]clean:css', '[prod]clean:pkg', '[prod]clean:static-src']);
 
-gulp.task('zip', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css'], function() {
+gulp.task('zip', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css', '[zip]clean:static-src'], function() {
   runSequence(
     ['[zip]move:cdn'],
     ['zip:cdn'],
@@ -35,7 +35,7 @@ gulp.task('zip', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css'], function
   )
 });
 
-gulp.task('zip-inline', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css', '[zip]clean:pkg'], function() {
+gulp.task('zip-inline', ['[zip]clean:src', '[zip]clean:js', '[zip]clean:css', '[zip]clean:pkg', '[zip]clean:static-src'], function() {
   runSequence(
     ['[zip]move:cdn'],
     ['zip:cdn'],
@@ -67,6 +67,11 @@ gulp.task('[prod]clean:pkg', function() {
   return gulp.src('./' + prod_dir.root + '/' + prod_dir.static + '/pkg')
     .pipe(clean());
 });
+gulp.task('[prod]clean:static-src', function() {
+  return gulp.src('./' + prod_dir.root + '/' + prod_dir.static + '/src')
+    .pipe(clean());
+});
+
 
 
 
@@ -87,6 +92,11 @@ gulp.task('[zip]clean:pkg', function() {
   return gulp.src('./' + zip_dir.root + '/' + zip_dir.static + '/pkg')
     .pipe(clean());
 });
+gulp.task('[zip]clean:static-src', function() {
+  return gulp.src('./' + zip_dir.root + '/' + zip_dir.static + '/src')
+    .pipe(clean());
+});
+
 gulp.task('[zip]clean:temp', function() {
   return gulp.src('./' + zip_dir.root)
     .pipe(clean());
