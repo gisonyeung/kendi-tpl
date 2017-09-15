@@ -12,6 +12,7 @@ var roots = [
 // 不校验的文件
 var excludes = [
     /^\/src\/views\/lib\//,
+    /^\/src\/components\/Maserati\//,
 ];
 
 // 全局变量
@@ -29,7 +30,9 @@ var globals = {
         '__DEV__',
         'TCISD',
         'BJ_REPORT',
-
+        'WeixinJSBridge',
+        'WxVideo',
+        'Base64',
     ],
     // 服务端，给未来需要部署 node 代理服务器预留接口
     // server: [
