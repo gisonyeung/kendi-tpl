@@ -64,6 +64,7 @@ fis.match('(*).swig', {
     useSameNameRequire: true,
 })
 
+// [vue]
 fis.match('*.vue', {
     isMod: true,
     rExt: 'js',
@@ -82,7 +83,6 @@ fis.match('*.vue', {
     }),
     postprocessor: ss.vue_tpl
 });
-
 fis.match('*.vue:js', {
     isMod: true,
     rExt: 'js',
@@ -91,9 +91,6 @@ fis.match('*.vue:js', {
     parser: fis.plugin('babel'),
     preprocessor: ss.vue_js,
 });
-
-
-
 fis.match('*.vue:scss', {
     // fis-parser-node-sass 插件进行解析
     // npm install [-g] fis3-parser-node-sass
@@ -180,6 +177,9 @@ fis.match('::packager', {
     }),
     packager: fis.plugin('map'),
 })
+
+
+
 
 
 // 生产环境：内联页面文件，提取lib文件
@@ -271,12 +271,7 @@ release_pipe_inline(fis.media('prod-inline'))
         ]
     });
 
-
-
-
-
 // 打包离线包：内联页面文件，提取lib文件
-// 使用方法 fis3 release zip
 release_pipe(fis.media('zip'))
     .match('::packager', {
         // npm install [-g] fis3-postpackager-loader
@@ -325,7 +320,6 @@ release_pipe(fis.media('zip'))
     });
 
 // 打包离线包：内联所有文件
-// 使用方法 fis3 release zip
 release_pipe(fis.media('zip-inline'))
     .match('::packager', {
         // npm install [-g] fis3-postpackager-loader
@@ -371,84 +365,6 @@ release_pipe(fis.media('zip-inline'))
             }),
         ]
     });
-
-
-
-
-
-
-
-
-
-function release_pipe(head) {
-    return head
-        .match('(*).swig',{
-            release: `/${release_config.child.pages}`,
-            optimizer: fis.plugin('html-minifier')     
-        })
-        .match('**/layout.swig', {
-            release: false
-        })
-        // npm install [-g] fis3-parser-babel
-        // npm install [-g] babel-core
-        .match('*.js', {
-            // es6 => es5
-            parser: fis.plugin('babel'),
-            optimizer: fis.plugin('uglify-js')
-        })
-        // 将 lib 中的js全部打包到一个文件中
-        .match('src/views/lib/**/**.js', {
-            packTo: `/${release_config.child.static}/pkg/lib.bundle.js`,
-            parser: false,
-        })
-        .match('src/components/util/(*).js', {
-            release: `${release_config.child.static}/js/util/$1`
-        })
-        .match('src/components/Maserati/(*).js', {
-            release: `${release_config.child.static}/js/Maserati/$1`
-        })
-        // 生产环境增加 hash
-        .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
-            useHash: true
-        })
-        .match('*.scss', {
-            // compress css
-            optimizer: fis.plugin('clean-css')
-        })
-};
-
-function release_pipe_inline(head) {
-    return head
-        .match('(*).swig',{
-            release: `/${release_config.child.pages}`,
-            optimizer: fis.plugin('html-minifier')     
-        })
-        .match('**/layout.swig', {
-            release: false
-        })
-        // npm install [-g] fis3-parser-babel
-        // npm install [-g] babel-core
-        .match('*.js', {
-            // es6 => es5
-            parser: fis.plugin('babel'),
-            optimizer: fis.plugin('uglify-js')
-        })
-        .match('src/components/util/(*).js', {
-            release: `${release_config.child.static}/js/util/$1`
-        })
-        .match('src/components/Maserati/(*).js', {
-            release: `${release_config.child.static}/js/Maserati/$1`
-        })
-        // 生产环境增加 hash
-        .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
-            useHash: true
-        })
-        .match('*.scss', {
-            // compress css
-            optimizer: fis.plugin('clean-css')
-        })
-};
-
 
 // 开发环境：不压缩内联所有文件，方便fiddler进行页面替换
 fis.media('dev-inline')
@@ -521,5 +437,76 @@ fis.media('dev-inline')
             }),
         ]
     });
+
+function release_pipe(head) {
+    return head
+        .match('(*).swig',{
+            release: `/${release_config.child.pages}`,
+            optimizer: fis.plugin('html-minifier')     
+        })
+        .match('**/layout.swig', {
+            release: false
+        })
+        // npm install [-g] fis3-parser-babel
+        // npm install [-g] babel-core
+        .match('*.js', {
+            // es6 => es5
+            parser: fis.plugin('babel'),
+            optimizer: fis.plugin('uglify-js')
+        })
+        // 将 lib 中的js全部打包到一个文件中
+        .match('src/views/lib/**/**.js', {
+            packTo: `/${release_config.child.static}/pkg/lib.bundle.js`,
+            parser: false,
+        })
+        .match('src/components/util/(*).js', {
+            release: `${release_config.child.static}/js/util/$1`
+        })
+        .match('src/components/Maserati/(*).js', {
+            release: `${release_config.child.static}/js/Maserati/$1`
+        })
+        // 生产环境增加 hash
+        .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
+            useHash: true
+        })
+        .match('*.scss', {
+            // compress css
+            optimizer: fis.plugin('clean-css')
+        })
+};
+
+function release_pipe_inline(head) {
+    return head
+        .match('(*).swig',{
+            release: `/${release_config.child.pages}`,
+            optimizer: fis.plugin('html-minifier')     
+        })
+        .match('**/layout.swig', {
+            release: false
+        })
+        // npm install [-g] fis3-parser-babel
+        // npm install [-g] babel-core
+        .match('*.js', {
+            // es6 => es5
+            parser: fis.plugin('babel'),
+            optimizer: fis.plugin('uglify-js')
+        })
+        .match('src/components/util/(*).js', {
+            release: `${release_config.child.static}/js/util/$1`
+        })
+        .match('src/components/Maserati/(*).js', {
+            release: `${release_config.child.static}/js/Maserati/$1`
+        })
+        // 生产环境增加 hash
+        .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
+            useHash: true
+        })
+        .match('*.scss', {
+            // compress css
+            optimizer: fis.plugin('clean-css')
+        })
+};
+
+
 
 
