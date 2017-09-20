@@ -34,6 +34,7 @@
     "fis3-deploy-skip-packed": "0.0.5",
     "fis3-deploy-zip": "^2.0.0",
     "fis3-hook-module": "^1.2.2",
+    "fis3-optimizer-dfy-html-minifier": "^1.0.1",
     "fis3-parser-babel": "^1.2.4",
     "fis3-parser-vue-component": "^5.4.0",
     "fis3-postpackager-inline-ex": "^1.0.0",

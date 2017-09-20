@@ -42,6 +42,21 @@ fis.set('project.ignore',[
     'README.md'
 ]);
 
+// 配置文档：https://segmentfault.com/a/1190000008995453
+fis.config.set('settings.optimizer.uglify-js', {
+    mangle: {
+        except: 'exports, module, require, define'
+    },
+    compress : {
+        drop_console: true,
+        dead_code: true,
+        booleans: true,
+        loops: true,
+        join_vars: true,
+        negate_iife: true
+    }
+})
+
 /* 匹配规则 */
 
 
@@ -442,7 +457,14 @@ function release_pipe(head) {
     return head
         .match('(*).swig',{
             release: `/${release_config.child.pages}`,
-            optimizer: fis.plugin('html-minifier')     
+            optimizer: fis.plugin('dfy-html-minifier', {
+                removeComments: true, //去掉注释 
+                collapseWhitespace: true,
+                conservativeCollapse: true,
+                removeAttributeQuotes: true,
+                minifyJS: true, //压缩html内的js代码 
+                minifyCSS: true
+            })     
         })
         .match('**/layout.swig', {
             release: false
@@ -452,6 +474,9 @@ function release_pipe(head) {
         .match('*.js', {
             // es6 => es5
             parser: fis.plugin('babel'),
+            optimizer: fis.plugin('uglify-js')
+        })
+        .match('*.vue', {
             optimizer: fis.plugin('uglify-js')
         })
         // 将 lib 中的js全部打包到一个文件中
@@ -469,7 +494,7 @@ function release_pipe(head) {
         .match('*.{js,css,png,jpeg,jpg,webp,gif}', {
             useHash: true
         })
-        .match('*.scss', {
+        .match('*.{scss,css}', {
             // compress css
             optimizer: fis.plugin('clean-css')
         })
@@ -479,7 +504,14 @@ function release_pipe_inline(head) {
     return head
         .match('(*).swig',{
             release: `/${release_config.child.pages}`,
-            optimizer: fis.plugin('html-minifier')     
+            optimizer: fis.plugin('dfy-html-minifier', {
+                removeComments: true, //去掉注释 
+                collapseWhitespace: true,
+                conservativeCollapse: true,
+                removeAttributeQuotes: true,
+                minifyJS: true, //压缩html内的js代码 
+                minifyCSS: true
+            })     
         })
         .match('**/layout.swig', {
             release: false
@@ -489,6 +521,9 @@ function release_pipe_inline(head) {
         .match('*.js', {
             // es6 => es5
             parser: fis.plugin('babel'),
+            optimizer: fis.plugin('uglify-js')
+        })
+        .match('*.vue', {
             optimizer: fis.plugin('uglify-js')
         })
         .match('src/components/util/(*).js', {
